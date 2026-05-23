@@ -1,0 +1,354 @@
+/* ---------- Fonts ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Tiro+Devanagari+Sanskrit&display=swap');
+
+/* ---------- Tokens (light) ---------- */
+:root {
+  --bg: #fbf4e4;
+  --bg-card: #fffaf0;
+  --ink: #2a1810;
+  --ink-soft: #5a4030;
+  --accent: #c0392b;        /* saffron-red */
+  --accent-strong: #8b1e1e; /* deep maroon */
+  --gold: #c9a227;
+  --rule: #e6d3a3;
+  --shadow: 0 10px 30px rgba(90, 40, 10, 0.10), 0 2px 6px rgba(90, 40, 10, 0.06);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --devanagari: 'Tiro Devanagari Sanskrit', 'Noto Sans Devanagari', serif;
+  --content-width: 760px;
+  --radius: 12px;
+}
+
+/* ---------- Tokens (dark) ---------- */
+[data-theme="dark"] {
+  --bg: #14100c;
+  --bg-card: #1d1612;
+  --ink: #f3e3c4;
+  --ink-soft: #c9b48d;
+  --accent: #f08a4b;
+  --accent-strong: #f3b25b;
+  --gold: #e8c46a;
+  --rule: #3a2a1a;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------- Reset / base ---------- */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: var(--base-size, 18px);
+  line-height: 1.7;
+  transition: background-color .3s ease, color .3s ease;
+  /* subtle parchment texture */
+  background-image:
+    radial-gradient(at 0% 0%, rgba(201,162,39,0.06), transparent 40%),
+    radial-gradient(at 100% 100%, rgba(192,57,43,0.05), transparent 40%);
+  background-attachment: fixed;
+}
+
+:lang(sa), .devanagari,
+body :is(p, h1, h2, h3, h4, li, blockquote) {
+  /* Use Devanagari font automatically for Devanagari glyphs via unicode-range fallback;
+     we set the family list so Devanagari glyphs render with the Devanagari font. */
+  font-family: var(--serif);
+}
+/* Apply Devanagari font globally for those glyphs */
+body { font-family: var(--serif), var(--devanagari); }
+
+/* ---------- Scroll progress ---------- */
+#progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  z-index: 1000;
+  transition: width .1s linear;
+}
+
+/* ---------- Header / nav ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--bg-card) 92%, transparent);
+  backdrop-filter: saturate(140%) blur(8px);
+  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 1rem;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+  letter-spacing: .02em;
+}
+.brand .om {
+  font-family: var(--devanagari);
+  font-size: 1.6rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.brand .title {
+  font-size: 1.05rem;
+}
+.controls {
+  margin-left: auto;
+  display: flex;
+  gap: .4rem;
+}
+.controls button {
+  font: inherit;
+  font-size: .85rem;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: .35rem .6rem;
+  cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.controls button:hover {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.controls button[aria-pressed="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem 1.5rem;
+  max-width: var(--content-width);
+  margin: 0 auto;
+}
+.hero .om-large {
+  font-family: var(--devanagari);
+  font-size: 5rem;
+  color: var(--accent);
+  line-height: 1;
+  text-shadow: 0 4px 18px rgba(192, 57, 43, 0.18);
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  color: var(--accent-strong);
+  margin: .8rem 0 .2rem;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  letter-spacing: .01em;
+}
+.hero .subtitle {
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+/* ---------- Decorative divider ---------- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 320px;
+  margin: 2rem auto;
+  color: var(--gold);
+}
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rule), transparent);
+}
+.divider .om {
+  font-family: var(--devanagari);
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+/* ---------- Content card ---------- */
+.content {
+  max-width: var(--content-width);
+  margin: 1rem auto 4rem;
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+}
+.content::before,
+.content::after {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  height: 4px;
+  background:
+    linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .5;
+}
+.content::before { top: 6px; }
+.content::after  { bottom: 6px; }
+
+.content p {
+  margin: 1rem 0;
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Devanagari paragraphs: detect by checking if first character is Devanagari range.
+   We can't do that purely in CSS — instead, style strong (used heavily for Devanagari)
+   with the Devanagari font and accent color. */
+.content strong {
+  font-family: var(--devanagari);
+  color: var(--accent-strong);
+  font-weight: 600;
+}
+
+.content p:first-child,
+.content p:nth-child(2) {
+  text-align: center;
+  font-size: 1.15em;
+  color: var(--accent-strong);
+}
+.content p:first-child strong,
+.content p:nth-child(2) strong {
+  color: var(--accent-strong);
+}
+
+/* Standalone Sanskrit verse paragraphs (paragraphs whose only content is <strong>)
+   styled as verse blocks */
+.content p:has(> strong:only-child) {
+  text-align: center;
+  font-size: 1.1em;
+  line-height: 1.9;
+  margin: 1.4rem 0;
+  letter-spacing: .01em;
+}
+
+/* Image styling — overrides the inline width/height from pandoc */
+.content img {
+  display: block;
+  margin: 2rem auto;
+  width: clamp(180px, 40%, 260px) !important;
+  height: auto !important;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(192, 57, 43, 0.2);
+  border: 4px solid var(--gold);
+  padding: 4px;
+  background: var(--bg-card);
+}
+
+/* Headings inside content */
+.content h1, .content h2, .content h3, .content h4 {
+  font-family: var(--serif);
+  color: var(--accent-strong);
+  margin-top: 2rem;
+  font-weight: 600;
+}
+.content h2 { font-size: 1.6rem; }
+.content h3 { font-size: 1.3rem; }
+.content h4 { font-size: 1.1rem; }
+
+/* Lists */
+.content ul, .content ol {
+  padding-left: 1.5rem;
+}
+
+/* Blockquotes */
+.content blockquote {
+  border-left: 4px solid var(--gold);
+  background: color-mix(in srgb, var(--gold) 8%, transparent);
+  padding: .8rem 1.2rem;
+  margin: 1.2rem 0;
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--ink-soft);
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem 3rem;
+  color: var(--ink-soft);
+  font-size: .9rem;
+}
+.site-footer .om {
+  font-family: var(--devanagari);
+  color: var(--accent);
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: .5rem;
+}
+.site-footer a {
+  color: var(--accent-strong);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--accent-strong);
+}
+.site-footer a:hover { color: var(--accent); }
+
+/* ---------- Back to top ---------- */
+#to-top {
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease, transform .25s ease, background .25s;
+  box-shadow: 0 6px 16px rgba(192, 57, 43, 0.4);
+  z-index: 60;
+}
+#to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+#to-top:hover {
+  background: var(--accent-strong);
+  transform: translateY(-2px);
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .site-header, #progress, #to-top, .controls { display: none !important; }
+  body { background: #fff; color: #000; }
+  .content { box-shadow: none; border: none; }
+}
+
+/* ---------- Mobile tweaks ---------- */
+@media (max-width: 600px) {
+  .brand .title { display: none; }
+  .hero { padding-top: 2rem; }
+  .hero .om-large { font-size: 3.5rem; }
+}
+
+/* ---------- Subtle entrance ---------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.content { animation: fadeUp .5s ease both; }
+.hero    { animation: fadeUp .5s ease .05s both; }
