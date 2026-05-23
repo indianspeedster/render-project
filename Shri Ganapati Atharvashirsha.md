@@ -4,7 +4,7 @@
 
 **Shri Ganapati Atharvashirsha**
 
-![](media/image1.jpg){width="1.2525688976377953in"
+![](./media/image1.jpg){width="1.2525688976377953in"
 height="1.474060586176728in"}
 
 **ॐ भद्रं कर्णेभिः शृणुयाम देवाः ।**
