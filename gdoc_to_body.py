@@ -127,6 +127,10 @@ def main():
         content = "".join(render(c, para_color) for c in block.children).strip()
         if not content:
             continue
+        # Drop Google Docs' auto-injected tab labels ("Tab 1", "Tab 2.3", ...).
+        plain = block.get_text(strip=True)
+        if re.fullmatch(r"Tab \d+(\.\d+)*", plain):
+            continue
         tag = block.name
         props = []
         a = align(bstyle)
