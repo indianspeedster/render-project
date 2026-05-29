@@ -47,6 +47,19 @@ def align(style):
     return a if a in ("center", "right", "justify") else None
 
 
+# The document's body text is 11pt; express sizes relative to it so the doc's
+# size hierarchy is reproduced while still scaling with the reader's A+/A- control.
+BASE_PT = 11.0
+
+
+def font_size_em(style):
+    m = re.search(r"font-size:\s*([\d.]+)pt", style or "")
+    if not m:
+        return None
+    em = round(float(m.group(1)) / BASE_PT, 2)
+    return em if em != 1.0 else None
+
+
 def main():
     json_path, media_dir = sys.argv[1], sys.argv[2]
     data = json.loads(open(json_path, encoding="utf-8").read())
@@ -94,8 +107,14 @@ def main():
             inner = f"<em>{inner}</em>"
         if bold:
             inner = f"<strong>{inner}</strong>"
+        props = []
         if color and color not in DEFAULT_COLORS:
-            inner = f'<span style="color:{color}">{inner}</span>'
+            props.append(f"color:{color}")
+        size = font_size_em(style)
+        if size:
+            props.append(f"font-size:{size}em")
+        if props:
+            inner = f'<span style="{";".join(props)}">{inner}</span>'
         return inner
 
     out = []
@@ -103,12 +122,20 @@ def main():
         if block.name == "hr":
             out.append("<hr />")
             continue
-        para_color = parse_color(block.get("style", ""))
+        bstyle = block.get("style", "")
+        para_color = parse_color(bstyle)
         content = "".join(render(c, para_color) for c in block.children).strip()
         if not content:
             continue
         tag = block.name
-        attr = f' style="text-align:{align(block.get("style", ""))}"' if align(block.get("style", "")) else ""
+        props = []
+        a = align(bstyle)
+        if a:
+            props.append(f"text-align:{a}")
+        size = font_size_em(bstyle)
+        if size:
+            props.append(f"font-size:{size}em")
+        attr = f' style="{";".join(props)}"' if props else ""
         out.append(f"<{tag}{attr}>{content}</{tag}>")
 
     sys.stdout.write("\n".join(out) + "\n")
