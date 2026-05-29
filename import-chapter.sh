@@ -9,13 +9,20 @@
 
 set -euo pipefail
 
-if [ "$#" -lt 6 ]; then
-  echo "Usage: $0 <tool-result.json> <work-slug> <ch-slug> <n> \"<Title>\" \"<Title SA>\"" >&2
+if [ "$#" -lt 4 ]; then
+  echo "Usage: $0 <tool-result.json> <work-slug> <ch-slug> <n> [\"<Title>\"] [\"<Title SA>\"]" >&2
   exit 1
 fi
 
-json="$1"; work="$2"; slug="$3"; n="$4"; title="$5"; title_sa="$6"
+json="$1"; work="$2"; slug="$3"; n="$4"; title="${5:-}"; title_sa="${6:-}"
 here="$(cd "$(dirname "$0")" && pwd)"
+
+# Derive chapter labels from the number when not supplied.
+if [ -z "$title" ]; then title="Chapter $n"; fi
+if [ -z "$title_sa" ]; then
+  dev="$(python3 -c "import sys;print(str(int(sys.argv[1])).translate(str.maketrans('0123456789','०१२३४५६७८९')))" "$n")"
+  title_sa="अध्यायः $dev"
+fi
 
 tmp_docx="$(mktemp --suffix=.docx)"
 tmp_body="$(mktemp)"
